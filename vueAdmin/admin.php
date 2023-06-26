@@ -32,7 +32,8 @@ if(!isset($_SESSION['admin']) || $_SESSION['admin'] !== true) {
     $recupUsers = $bdd->query('SELECT * FROM utilisateur');
     while ($user = $recupUsers->fetch()) {
        ?>
-       <p style="display:flex; justify-content:center; align-items:center; padding-top: 2em"><?=  $user['name'];?><button><a href="bannir.php?id=<?= $user['id']; ?>" style="color:red; text-decoration: none;">Supprimer le membre</a></button></p>
+      <p style="display:flex; justify-content:center; align-items:center; padding-top: 2em"><?=  $user['nom'];?><button><a href="bannir.php?id=<?= $user['id_Utilisateur'] ?>" style="color:red; text-decoration: none;">Supprimer le membre</a></button></p>
+
        <?php
     }
     ?>
