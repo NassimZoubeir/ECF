@@ -1,6 +1,6 @@
 <?php
-
 // Démarre une session pour utiliser les variables de session
+session_start();
 
 if (!empty($_POST['mail']) && !empty($_POST['password'])) {
     require_once '../include/db.php';
@@ -12,45 +12,41 @@ if (!empty($_POST['mail']) && !empty($_POST['password'])) {
     $user = $req->fetch();
     // Récupère la première ligne de résultat
     if ($user) {
+        if ($user->isActive == 0) {
+            // Vérifie si le compte utilisateur est désactivé
+            $_SESSION['flash']['danger'] = 'Votre compte a été désactivé. Veuillez contacter l\'administrateur.';
+            header('Location: ../connexion.php');
+            exit();
+        }
+
         if (password_verify($_POST['password'], $user->mp)) {
             // Vérifie si le mot de passe fourni correspond au mot de passe haché stocké en base de données
-            session_start();
-           $_SESSION['auth'] = $user;
-           
-            if (intval($user->role) == 3) {
+            $_SESSION['auth'] = $user;
 
+            if (intval($user->role) == 3) {
                 // Utilisateur a le rôle ADMIN
                 $_SESSION['admin'] = true;
                 $_SESSION['flash']['success'] = 'Vous êtes maintenant connecté en tant qu\'administrateur';
                 header('Location: ../vueAdmin/admin.php');
                 exit();
-
-            } 
-            if (intval($user->role) == 2) {
-
+            } elseif (intval($user->role) == 2) {
                 // Utilisateur a le rôle USER
                 $_SESSION['flash']['success'] = 'Vous êtes maintenant connecté en tant qu\'utilisateur';
                 header('Location: ../vueProfil/profil.php');
-                // Redirige l'utilisateur vers la page de profil
-                exit(); // Arrête l'exécution du script
-
+                exit();
             } else {
-
                 // Utilisateur sans rôle approprié
                 $_SESSION['flash']['danger'] = 'Vous n\'avez pas les droits d\'accès';
             }
         } else {
-
-            // Stocke un message d'erreur dans la variable de session
+            // Mot de passe incorrect
             $_SESSION['flash']['danger'] = 'Identifiant ou mot de passe incorrect';
         }
     } else {
-
-        // Aucun utilisateur trouvé
+        // Aucun utilisateur trouvé avec l'email fourni
         $_SESSION['flash']['danger'] = 'Identifiant ou mot de passe incorrect';
     }
 } else {
-
     // Données manquantes
     $_SESSION['flash']['danger'] = 'Veuillez remplir tous les champs';
 }

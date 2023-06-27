@@ -36,6 +36,9 @@ if(isset($_POST['submit'])){
         $email = htmlspecialchars($_POST['email']) ;
         $password = $_POST['mp'];
 
+        // Récupérer le nom du fichier téléchargé
+        $avatar = basename($_FILES["fileToUpload"]["name"]);
+
         // cryptage du mot de passe
         $passHash = password_hash($password, PASSWORD_BCRYPT);
 
@@ -49,7 +52,7 @@ if(isset($_POST['submit'])){
         $statement->bindParam(':mp', $passHash);
         $statement->bindValue(':isActive', 1); // Nouvel utilisateur activé par défaut
         $statement->bindValue(':role', 2); // Nouvel utilisateur avec le rôle d'utilisateur par défaut
-        $statement->bindValue(':avatar', null); // Nouvel utilisateur sans avatar par défaut
+        $statement->bindParam(':avatar', $avatar);
 
         // Execution pour insertion en base de données
         $statement->execute();

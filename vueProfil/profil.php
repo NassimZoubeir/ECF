@@ -26,11 +26,27 @@ logged_only();
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
     <!-- fin Favicon -->
-    <title>Profil | Utilisateur</title>
+    <style>
+        .avatar {
+            display: block;
+            margin: 0 auto;
+            margin-top: 10em;
+            width: 150px;
+            height: 150px;
+        }
+    </style>
+
+    <title>Profil</title>
 </head>
 <body>
+
     <?php include 'menu.php'?>
     
     <h1 class="d-block position-absolute top-50 start-50 translate-middle p-5 border border-5 bg-light">Bonjour, <?= $_SESSION['auth']->nom; ?></h1>
+   
+     <?php if ($_SESSION['auth']->avatar): ?>
+        <img src="../assets/images/<?= $_SESSION['auth']->avatar ?>" alt="Avatar" class="avatar">
+    <?php endif; ?> 
+
 </body>
 </html>

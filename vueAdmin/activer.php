@@ -7,8 +7,8 @@ if(isset($_GET['id']) && !empty($_GET['id'])) {
     $recupUser->execute(array($getid));
     if($recupUser->rowCount() > 0) {
 
-        $bannirUser = $bdd->prepare('DELETE FROM utilisateur WHERE id_Utilisateur = ?');
-        $bannirUser->execute(array($getid));
+        $activerUser = $bdd->prepare('UPDATE utilisateur SET isActive = 1 WHERE id_Utilisateur = ?');
+        $activerUser->execute(array($getid));
 
         header('Location: admin.php');
         exit();
