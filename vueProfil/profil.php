@@ -42,7 +42,7 @@ logged_only();
 
     <?php include 'menu.php'?>
     
-    <h1 class="d-block position-absolute top-50 start-50 translate-middle p-5 border border-5 bg-light">Bonjour, <?= $_SESSION['auth']->nom; ?></h1>
+    <h1 class="d-block position-absolute top-50 start-50 translate-middle p-5 border border-5 bg-light">Bonjour <?= $_SESSION['auth']->nom;?>, bienvenue sur ta page profil !</h1>
    
      <?php if ($_SESSION['auth']->avatar): ?>
         <img src="../assets/images/<?= $_SESSION['auth']->avatar ?>" alt="Avatar" class="avatar">
