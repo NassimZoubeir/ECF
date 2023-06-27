@@ -2,10 +2,13 @@
 session_start();
 require_once 'include/db.php';
 
-// Requête pour récupérer tous les articles
-$query = "SELECT * FROM `Article`";
+// Requête pour récupérer toutes les listes contenant des articles
+$query = "SELECT l.*, a.nom AS article_nom, a.description AS article_description
+          FROM liste l
+          LEFT JOIN liste_has_article la ON l.id_Liste = la.id_Liste
+          LEFT JOIN article a ON la.id_Article = a.id_Article";
 $stmt = $pdo->query($query);
-$articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$listes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,25 +31,35 @@ $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
 <?php require_once 'include/menu.php' ?>
 				
-	<div class="container">
-        <h1 class="card-title text-primary text-center m-3">Liste des articles</h1>
+<div class="container">
+        <h1 class="card-title text-primary text-center m-3">Liste de souhaits</h1>
 
         <div class="row">
             <?php
-            // Affichage des articles
-            foreach ($articles as $article) {
-                echo '<div class="col-md-4 ">';
+            // Affichage des listes et des articles associés
+            foreach ($listes as $liste) {
+                echo '<div class="col-md-4">';
                 echo '<div class="card m-3">';
                 echo '<div class="card-body">';
-                echo '<h2 class="card-title text-primary">' . $article['nom'] . ':</h2>';
-                echo '<p class="card-text text-muted">' . $article['description'] . '</p>';
+                echo '<h2 class="card-title text-primary">' . $liste['nom'] . ':</h2>';
+                echo '<p class="card-text text-muted">' . $liste['description'] . '</p>';
+                
+                // Vérifier si la liste contient des articles
+                if (!empty($liste['article_nom'])) {
+                    echo '<p>Articles :</p>';
+                    echo '<ul>';
+                    echo '<li>' . $liste['article_nom'] . ' - ' . $liste['article_description'] . '</li>';
+                    echo '</ul>';
+                } else {
+                    echo '<p>Cette liste ne contient aucun article.</p>';
+                }
+                
                 echo '</div>';
                 echo '</div>';
                 echo '</div>';
             }
             ?>
         </div>
-    </div>
     </div>
 </body>
 
