@@ -1,8 +1,9 @@
-<?php 
+<?php
 session_start();
 $bdd = new PDO('mysql:host=localhost:8889;dbname=boutique2;', 'root', 'root');
 
-if(!isset($_SESSION['admin']) || $_SESSION['admin'] !== true) {
+// Vérifie si l'utilisateur est connecté et a le rôle d'administrateur
+if (!isset($_SESSION['auth']) || intval($_SESSION['auth']->role) !== 3) {
     header('Location: ../connexion.php');
     exit();
 }
