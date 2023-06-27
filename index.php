@@ -3,10 +3,12 @@ session_start();
 require_once 'include/db.php';
 
 // Requête pour récupérer toutes les listes contenant des articles
-$query = "SELECT l.*, a.nom AS article_nom, a.description AS article_description
+$query = "SELECT l.*, a.nom AS article_nom, a.description AS article_description, u.nom AS utilisateur_nom
           FROM liste l
           LEFT JOIN liste_has_article la ON l.id_Liste = la.id_Liste
-          LEFT JOIN article a ON la.id_Article = a.id_Article";
+          LEFT JOIN article a ON la.id_Article = a.id_Article
+          LEFT JOIN utilisateur u ON l.id_Utilisateur = u.id_Utilisateur";
+
 $stmt = $pdo->query($query);
 $listes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -41,7 +43,7 @@ $listes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 echo '<div class="col-md-4">';
                 echo '<div class="card m-3">';
                 echo '<div class="card-body">';
-                echo '<h2 class="card-title text-primary">' . $liste['nom'] . ':</h2>';
+                echo '<h2 class="card-title text-primary">' . $liste['nom'] . ' (par ' . $liste['utilisateur_nom'] . '):</h2>';
                 echo '<p class="card-text text-muted">' . $liste['description'] . '</p>';
                 
                 // Vérifier si la liste contient des articles

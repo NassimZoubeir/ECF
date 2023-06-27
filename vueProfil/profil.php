@@ -1,6 +1,14 @@
 <?php
 require '../include/function.php';
+require '../include/db.php';
 logged_only();
+
+// Récupération des listes de souhaits de l'utilisateur
+$id_Utilisateur = $_SESSION['auth']->id_Utilisateur;
+$query = "SELECT * FROM liste WHERE id_Utilisateur = ?";
+$stmt = $pdo->prepare($query);
+$stmt->execute([$id_Utilisateur]);
+$listes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,7 +38,7 @@ logged_only();
         .avatar {
             display: block;
             margin: 0 auto;
-            margin-top: 10em;
+            margin-top: 1em;
             width: 150px;
             height: 150px;
         }
@@ -42,11 +50,39 @@ logged_only();
 
     <?php include 'menu.php'?>
     
-    <h1 class="d-block position-absolute top-50 start-50 translate-middle p-5 border border-5 bg-light">Bonjour <?= $_SESSION['auth']->nom;?>, bienvenue sur ta page profil !</h1>
-   
+    <h1 class="text-center mt-4  p-3 border border-5 bg-light">Bonjour <?= $_SESSION['auth']->nom;?>, bienvenue sur ta page profil !</h1>    
      <?php if ($_SESSION['auth']->avatar): ?>
         <img src="../assets/images/<?= $_SESSION['auth']->avatar ?>" alt="Avatar" class="avatar">
     <?php endif; ?> 
 
+    <div class="container mt-5">
+        <h2 class="text-center">Mes listes de souhaits</h2>
+        <?php if (count($listes) > 0): ?>
+            <ul>
+                <?php foreach ($listes as $liste): ?>
+                    <li>
+                        <strong><?= $liste['nom'] ?></strong> - <?= $liste['description'] ?>
+                        <a href="modifier_liste.php?id=<?= $liste['id_Liste'] ?>">Modifier</a>
+                        <a href="supprimer_liste.php?id=<?= $liste['id_Liste'] ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette liste ?')">Supprimer</a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php else: ?>
+            <p class="text-center">Aucune liste de souhaits pour le moment.</p>
+        <?php endif; ?>
+
+        <h2>Créer une nouvelle liste de souhaits</h2>
+        <form action="creer_liste.php" method="post">
+            <div class="mb-3">
+                <label for="titre" class="form-label">Titre :</label>
+                <input type="text" name="titre" id="titre" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description :</label>
+                <textarea name="description" id="description" rows="3" class="form-control" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Créer</button>
+        </form>
+ 
 </body>
 </html>
