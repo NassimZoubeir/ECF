@@ -62,6 +62,7 @@ $listes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php foreach ($listes as $liste): ?>
                     <li>
                         <strong><?= $liste['nom'] ?></strong> - <?= $liste['description'] ?>
+                        <a href="ajouter_article.php?id_Liste=<?= $liste['id_Liste'] ?>">Ajouter un article</a>
                         <a href="modifier_liste.php?id=<?= $liste['id_Liste'] ?>">Modifier</a>
                         <a href="supprimer_liste.php?id=<?= $liste['id_Liste'] ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette liste ?')">Supprimer</a>
                     </li>
