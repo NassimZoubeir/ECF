@@ -74,24 +74,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Ajouter un article</title>
 </head>
 <body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h1 class="text-center">Ajouter un article</h1>
 
-    <h1>Ajouter un article</h1>
-
-    <form action="ajouter_article.php?id_Liste=<?= $_GET['id_Liste'] ?>" method="post">
-        <div class="mb-3">
-            <label for="nom_article" class="form-label">Nom de l'article :</label>
-            <input type="text" name="nom_article" id="nom_article" class="form-control" required>
+                <form action="ajouter_article.php?id_Liste=<?= $_GET['id_Liste'] ?>" method="post">
+                    <div class="mb-3">
+                        <label for="nom_article" class="form-label">Nom de l'article :</label>
+                        <input type="text" name="nom_article" id="nom_article" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description_article" class="form-label">Description de l'article :</label>
+                        <textarea name="description_article" id="description_article" rows="3" class="form-control" required></textarea>
+                    </div>
+                    <input type="hidden" name="id_Liste" value="<?= $_GET['id_Liste'] ?>">
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                </form>
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="description_article" class="form-label">Description de l'article :</label>
-            <textarea name="description_article" id="description_article" rows="3" class="form-control" required></textarea>
-        </div>
-        <input type="hidden" name="id_Liste" value="<?= $_GET['id_Liste'] ?>">
-        <button type="submit" class="btn btn-primary">Ajouter</button>
-    </form>
-
-
-
+    </div>
 </body>
+
 </html>
 

@@ -9,6 +9,17 @@ $query = "SELECT * FROM liste WHERE id_Utilisateur = ?";
 $stmt = $pdo->prepare($query);
 $stmt->execute([$id_Utilisateur]);
 $listes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Récupération des articles pour chaque liste
+foreach ($listes as &$liste) {
+    $id_Liste = $liste['id_Liste'];
+    $query = "SELECT article.* FROM article INNER JOIN liste_has_article ON article.id_Article = liste_has_article.id_Article WHERE liste_has_article.id_Liste = ?";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([$id_Liste]);
+    $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $liste['articles'] = $articles;
+}
+unset($liste);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -62,15 +73,35 @@ $listes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php foreach ($listes as $liste): ?>
                     <li>
                         <strong><?= $liste['nom'] ?></strong> - <?= $liste['description'] ?>
-                        <a href="ajouter_article.php?id_Liste=<?= $liste['id_Liste'] ?>">Ajouter un article</a>
-                        <a href="modifier_liste.php?id=<?= $liste['id_Liste'] ?>">Modifier</a>
-                        <a href="supprimer_liste.php?id=<?= $liste['id_Liste'] ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette liste ?')">Supprimer</a>
+                        <div class="btn-group">
+                            <a href="ajouter_article.php?id_Liste=<?= $liste['id_Liste'] ?>" class="btn btn-primary">Ajouter un article</a>
+                            <a href="modifier_liste.php?id=<?= $liste['id_Liste'] ?>" class="btn btn-secondary">Modifier</a>
+                            <a href="supprimer_liste.php?id=<?= $liste['id_Liste'] ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette liste ?')" class="btn btn-danger">Supprimer</a>
+                        </div>
                     </li>
+                    <br>
                 <?php endforeach; ?>
             </ul>
         <?php else: ?>
             <p class="text-center">Aucune liste de souhaits pour le moment.</p>
         <?php endif; ?>
+
+        <?php if (count($listes) > 0): ?>
+        <h2 class="text-center">Mes articles</h2>
+        <?php foreach ($listes as $liste): ?>
+            <?php if (count($liste['articles']) > 0): ?>
+                <h3><?= $liste['nom'] ?></h3>
+                <ul>
+                    <?php foreach ($liste['articles'] as $article): ?>
+                        <li><?= $article['nom'] ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p class="text-center">Aucun article pour le moment.</p>
+    <?php endif; ?>
+
 
         <h2>Créer une nouvelle liste de souhaits</h2>
         <form action="creer_liste.php" method="post">
