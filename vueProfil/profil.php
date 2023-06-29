@@ -67,7 +67,7 @@ unset($liste);
     <?php endif; ?> 
 
     <div class="container mt-5">
-        <h2 class="text-center">Mes listes de souhaits</h2>
+        <h2 class="text-center">Mes listes de souhaits</h2> <br>
         <?php if (count($listes) > 0): ?>
             <ul>
                 <?php foreach ($listes as $liste): ?>
