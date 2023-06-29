@@ -87,7 +87,6 @@ unset($liste);
         <?php endif; ?>
 
         <?php if (count($listes) > 0): ?>
-        <h2 class="text-center">Mes articles</h2>
         <?php foreach ($listes as $liste): ?>
             <?php if (count($liste['articles']) > 0): ?>
                 <h3><?= $liste['nom'] ?></h3>
