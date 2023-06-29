@@ -29,14 +29,14 @@ unset($liste);
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- spécifie la version du mode de compatibilité d'Internet Explorer utilisée par le navigateur. Dans ce cas, "IE=edge" indique d'utiliser la dernière version disponible. -->
-    
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- définit la vue de la page pour les appareils mobiles. Elle indique que la largeur de la page doit correspondre à la largeur de l'appareil et que l'échelle initiale doit être définie à 1.0, assurant ainsi une mise en page adaptative sur les différents appareils. -->
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <!-- Link de la feuille de style de BootStrap -->
 
-    <!-- lien spécifique au Favicon suivant le support de diffusion utilisé --> 
+    <!-- lien spécifique au Favicon suivant le support de diffusion utilisé -->
     <link rel="apple-touch-icon" sizes="180x180" href="../assets/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon/favicon-16x16.png">
@@ -58,49 +58,46 @@ unset($liste);
     <title>Profil</title>
 </head>
 <body>
-
-    <?php include 'menu.php'?>
-    
-    <h1 class="text-center mt-4  p-3 border border-5 bg-light">Bonjour <?= $_SESSION['auth']->nom;?>, bienvenue sur ta page profil !</h1>    
-     <?php if ($_SESSION['auth']->avatar): ?>
+    <?php include 'menu.php' ?>
+    <h1 class="text-center mt-4  p-3 border border-5 bg-light">Bonjour <?= $_SESSION['auth']->nom; ?>, bienvenue sur ta page profil !</h1>
+    <?php if ($_SESSION['auth']->avatar) : ?>
         <img src="../assets/images/<?= $_SESSION['auth']->avatar ?>" alt="Avatar" class="avatar">
-    <?php endif; ?> 
+    <?php endif; ?>
 
     <div class="container mt-5">
         <h2 class="text-center">Mes listes de souhaits</h2> <br>
-        <?php if (count($listes) > 0): ?>
+        <?php if (count($listes) > 0) : ?>
             <ul>
-                <?php foreach ($listes as $liste): ?>
+                <?php foreach ($listes as $liste) : ?>
                     <li>
                         <strong><?= $liste['nom'] ?></strong> - <?= $liste['description'] ?>
                         <div class="btn-group">
                             <a href="ajouter_article.php?id_Liste=<?= $liste['id_Liste'] ?>" class="btn btn-primary">Ajouter un article</a>
-                            <a href="modifier_liste.php?id=<?= $liste['id_Liste'] ?>" class="btn btn-secondary">Modifier</a>
-                            <a href="supprimer_liste.php?id=<?= $liste['id_Liste'] ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette liste ?')" class="btn btn-danger">Supprimer</a>
+                            <a href="modifier_liste.php?id=<?= $liste['id_Liste'] ?>" class="btn btn-secondary">Modifier la liste</a>
+                            <a href="supprimer_liste.php?id=<?= $liste['id_Liste'] ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette liste ?')" class="btn btn-danger">Supprimer la liste</a>
                         </div>
                     </li>
                     <br>
                 <?php endforeach; ?>
             </ul>
-        <?php else: ?>
+        <?php else : ?>
             <p class="text-center">Aucune liste de souhaits pour le moment.</p>
         <?php endif; ?>
 
-        <?php if (count($listes) > 0): ?>
-        <?php foreach ($listes as $liste): ?>
-            <?php if (count($liste['articles']) > 0): ?>
-                <h3><?= $liste['nom'] ?></h3>
-                <ul>
-                    <?php foreach ($liste['articles'] as $article): ?>
-                        <li><?= $article['nom'] ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <p class="text-center">Aucun article pour le moment.</p>
-    <?php endif; ?>
-
+        <?php if (count($listes) > 0) : ?>
+            <?php foreach ($listes as $liste) : ?>
+                <?php if (count($liste['articles']) > 0) : ?>
+                    <h3><?= $liste['nom'] ?></h3>
+                    <ul>
+                        <?php foreach ($liste['articles'] as $article) : ?>
+                            <li><?= $article['nom'] ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        <?php else : ?>
+            <p class="text-center">Aucun article pour le moment.</p>
+        <?php endif; ?>
 
         <h2>Créer une nouvelle liste de souhaits</h2>
         <form action="creer_liste.php" method="post">
@@ -114,6 +111,5 @@ unset($liste);
             </div>
             <button type="submit" class="btn btn-primary">Créer</button>
         </form>
- 
 </body>
 </html>
