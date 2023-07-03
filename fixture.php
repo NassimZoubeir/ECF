@@ -6,12 +6,6 @@ use Faker\Factory; // Importation de la classe Factory de la bibliothèque Faker
 
 $faker = Factory::create(); // Initialisation de l'objet Faker pour générer des données factices
 
-// // Paramètres de connexion à la base de données MySQL
-// $servername = "localhost:8889";
-// $username = "root";
-// $password = "root";
-// $dbname = "boutique2";
-
 try {
     // Connexion à la base de données avec PDO
     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
