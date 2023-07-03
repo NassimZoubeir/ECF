@@ -1,5 +1,6 @@
 <?php
 require_once 'include/db.php';
+require_once 'ajouter_commentaire.php';
 
 // Requête pour récupérer toutes les listes contenant des articles avec le nom du créateur
 $query = "SELECT l.id_Liste, l.nom, l.description, l.date, a.id_Article, a.nom AS article_nom, a.description AS article_description, u.nom AS createur_nom
@@ -36,6 +37,20 @@ $listes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="container">
         <h1 class="card-title text-primary text-center m-3">Liste de souhaits</h1>
 
+        <?php
+        // Afficher l'alerte d'erreur s'il y en a une
+        if (isset($_SESSION['erreur'])) {
+            echo '<div class="alert alert-danger">' . $_SESSION['erreur'] . '</div>';
+            unset($_SESSION['erreur']);
+        }
+
+        // Afficher l'alerte de succès s'il y en a une
+        if (isset($_SESSION['succes'])) {
+            echo '<div class="alert alert-success">' . $_SESSION['succes'] . '</div>';
+            unset($_SESSION['succes']);
+        }
+        ?>
+
         <div class="row">
             <?php
             // Variables pour garder une trace de l'id_Liste en cours
@@ -53,6 +68,17 @@ $listes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     if ($currentListId !== null) {
                         // Fermer la liste précédente si elle existe
                         echo '</ul>';
+
+                        // Afficher le formulaire de commentaire pour cette liste spécifique
+                        echo '<form action="ajouter_commentaire.php" method="POST">';
+                        echo '<input type="hidden" name="id_liste" value="' . $currentListId . '">';
+                        echo '<div class="mb-3">';
+                        echo '<label for="commentaire">Ajouter un commentaire :</label>';
+                        echo '<textarea class="form-control" name="commentaire" id="commentaire" rows="3" required></textarea>';
+                        echo '</div>';
+                        echo '<button type="submit" class="btn btn-primary">Ajouter un commentaire</button>';
+                        echo '</form>';
+
                         echo '</div>';
                         echo '</div>';
                         echo '</div>';
@@ -84,6 +110,17 @@ $listes = $stmt->fetchAll(PDO::FETCH_ASSOC);
             // Fermer la dernière liste
             if ($currentListId !== null) {
                 echo '</ul>';
+
+                // Afficher le formulaire de commentaire pour cette liste spécifique
+                echo '<form action="ajouter_commentaire.php" method="POST">';
+                echo '<input type="hidden" name="id_liste" value="' . $currentListId . '">';
+                echo '<div class="mb-3">';
+                echo '<label for="commentaire">Ajouter un commentaire :</label>';
+                echo '<textarea class="form-control" name="commentaire" id="commentaire" rows="3" required></textarea>';
+                echo '</div>';
+                echo '<button type="submit" class="btn btn-primary">Ajouter un commentaire</button>';
+                echo '</form>';
+
                 echo '</div>';
                 echo '</div>';
                 echo '</div>';
