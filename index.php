@@ -3,11 +3,12 @@ require_once 'include/db.php';
 require_once 'ajouter_commentaire.php';
 
 // Requête pour récupérer toutes les listes contenant des articles avec le nom du créateur
-$query = "SELECT l.id_Liste, l.nom, l.description, l.date, a.id_Article, a.nom AS article_nom, a.description AS article_description, u.nom AS createur_nom
+$query = "SELECT l.id_Liste, l.nom, l.description, l.date, a.id_Article, a.nom AS article_nom, a.description AS article_description, u.nom AS createur_nom, c.description AS commentaire
           FROM liste l
           LEFT JOIN liste_has_article la ON l.id_Liste = la.id_Liste
           LEFT JOIN article a ON la.id_Article = a.id_Article
-          LEFT JOIN utilisateur u ON l.id_Utilisateur = u.id_Utilisateur";
+          LEFT JOIN utilisateur u ON l.id_Utilisateur = u.id_Utilisateur
+          LEFT JOIN commentaire c ON l.id_Liste = c.id_Liste";
 $stmt = $pdo->prepare($query);
 $stmt->execute();
 $listes = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -59,6 +60,7 @@ $listes = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $currentListDescription = null;
             $currentListDate = null;
             $currentCreateurNom = null;
+            $currentListComments = array();
 
             // Parcourir les résultats et afficher les listes avec les articles
             foreach ($listes as $liste) {
@@ -68,6 +70,18 @@ $listes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     if ($currentListId !== null) {
                         // Fermer la liste précédente si elle existe
                         echo '</ul>';
+
+                        // Afficher les commentaires pour cette liste spécifique
+                        if (!empty($currentListComments)) {
+                            echo '<div class="card m-3">';
+                            echo '<div class="card-body">';
+                            echo '<h5 class="card-title">Commentaires :</h5>';
+                            foreach ($currentListComments as $comment) {
+                                echo '<p class="card-text">' . $comment . '</p>';
+                            }
+                            echo '</div>';
+                            echo '</div>';
+                        }
 
                         // Afficher le formulaire de commentaire pour cette liste spécifique
                         echo '<form action="ajouter_commentaire.php" method="POST">';
@@ -91,6 +105,9 @@ $listes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     $currentListDate = $liste['date'];
                     $currentCreateurNom = $liste['createur_nom'];
 
+                    // Réinitialiser les commentaires de la nouvelle liste
+                    $currentListComments = array();
+
                     // Afficher les informations de la nouvelle liste
                     echo '<div class="col-md-4">';
                     echo '<div class="card m-3">';
@@ -103,13 +120,40 @@ $listes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     echo '<ul>';
                 }
 
+                // Ajouter le commentaire à la liste des commentaires de la liste en cours
+                if (!empty($liste['commentaire'])) {
+                    $currentListComments[] = $liste['commentaire'];
+                }
+
                 // Afficher l'article correspondant
                 echo '<li>' . $liste['article_nom'] . ' - ' . $liste['article_description'] . '</li>';
             }
 
-            // Fermer la dernière liste
-            if ($currentListId !== null) {
-                echo '</ul>';
+            
+
+               // Requête pour récupérer les commentaires pour cette liste spécifique
+                $query = "SELECT c.description, c.date, u.nom AS auteur_nom
+                FROM commentaire c
+                INNER JOIN utilisateur u ON c.id_Utilisateur = u.id_Utilisateur
+                WHERE c.id_Liste = :id_liste";
+                $stmt = $pdo->prepare($query);
+                $stmt->bindParam(':id_liste', $currentListId, PDO::PARAM_INT);
+                $stmt->execute();
+                $currentListComments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                // Afficher les commentaires pour cette liste spécifique
+                if (!empty($currentListComments)) {
+                    echo '<div class="card m-3">';
+                    echo '<div class="card-body">';
+                    echo '<h5 class="card-title">Commentaires :</h5>';
+                    foreach ($currentListComments as $comment) {
+                        echo '<div class="comment">';
+                        echo '<p class="comment-text">' . $comment['auteur_nom'] . ' : ' . $comment['description'] . '</p>';
+                        echo '</div>';
+                    }
+                    echo '</div>';
+                    echo '</div>';
+                }
 
                 // Afficher le formulaire de commentaire pour cette liste spécifique
                 echo '<form action="ajouter_commentaire.php" method="POST">';
@@ -124,7 +168,7 @@ $listes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 echo '</div>';
                 echo '</div>';
                 echo '</div>';
-            }
+            
             ?>
         </div>
     </div>
