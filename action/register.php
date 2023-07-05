@@ -9,7 +9,7 @@ if(isset($_POST['submit'])){
 
     if (empty($_POST['nom']) || !preg_match('/^[a-zA-Z]+$/', $_POST['nom'])) {
 
-        $errors['nom'] = "Votre nom n'est pas valide, il doit contenir que des majuscules et ou minuscules";
+        $errors['nom'] = "Votre nom n'est pas valide, il ne doit contenir que des majuscules et ou minuscules";
     }
 
     // email conditions et implémentation dans la base de données (utilisation de filter_var())
@@ -20,7 +20,7 @@ if(isset($_POST['submit'])){
 
     } else { // Requête pour vérifier si le compte mail existe déja ou non dans la base de données
 
-        $req = $pdo->prepare('SELECT id_Utilisateur FROM utilisateur WHERE email=?');
+        $req = $pdo->prepare('SELECT id_Utilisateur FROM utilisateur WHERE email = ?');
         $req->execute([$_POST['email']]);
         $user = $req->fetch();
 
@@ -31,7 +31,7 @@ if(isset($_POST['submit'])){
 
     if(empty($errors)){
 
-        // récupération des valeurs de champs de formulaire et sanitize
+        // récupération des valeurs de champs de formulaire
         $nom = htmlspecialchars($_POST['nom']) ;
         $email = htmlspecialchars($_POST['email']) ;
         $password = $_POST['mp'];

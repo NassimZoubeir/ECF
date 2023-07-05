@@ -1,10 +1,12 @@
 <?php
 // Démarre une session pour utiliser les variables de session
 session_start();
+
+// Inclut le fichier contenant la connexion à la base de données
 require_once '../include/db.php';
 
 if (!empty($_POST['mail']) && !empty($_POST['password'])) {
-    // Inclut le fichier contenant la connexion à la base de données
+    
     $req = $pdo->prepare("SELECT * FROM `utilisateur` WHERE `utilisateur`.`email` = ?");
     // Prépare une requête pour récupérer les données utilisateur en fonction de l'email
     $req->execute([$_POST['mail']]);
