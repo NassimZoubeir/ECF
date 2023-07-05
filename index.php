@@ -3,7 +3,7 @@ require_once 'include/db.php';
 require_once 'ajouter_commentaire.php';
 
 // Requête pour récupérer toutes les listes contenant des articles avec le nom du créateur
-$query = "SELECT l.id_Liste, l.nom, l.description, l.date, a.id_Article, a.nom AS article_nom, a.description AS article_description, u.id_Utilisateur, u.nom AS createur_nom, c.description AS commentaire
+$query = "SELECT l.id_Liste, l.nom, l.description, l.date, a.id_Article, a.nom AS article_nom, a.description AS article_description, u.id_Utilisateur, u.nom AS createur_nom, u.avatar, c.description AS commentaire
           FROM liste l
           LEFT JOIN liste_has_article la ON l.id_Liste = la.id_Liste
           LEFT JOIN article a ON la.id_Article = a.id_Article
@@ -30,7 +30,7 @@ $listes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
     <title>Accueil</title>
-        <style>
+    <style>
         .comment {
             display: flex;
             align-items: center;
@@ -93,8 +93,15 @@ $listes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             echo '<div class="card m-3">';
                             echo '<div class="card-body">';
                             echo '<h5 class="card-title">Commentaires :</h5>';
-                            foreach ($currentListComments as $comment) {
-                                echo '<p class="card-text">' . $comment . '</p>';
+                            foreach ($currentListComments[$currentListId] as $comment) {
+                                echo '<div class="comment">';
+                                echo '<img class="comment-avatar" src="assets/images/' . $comment['avatar'] . '" alt="Avatar">';
+                                echo '<div>';
+                                echo '<p class="comment-author">' . $comment['auteur'] . '</p>';
+                                echo '<p class="card-text">' . $comment['description'] . '</p>';
+                                echo '</div>';
+                                echo '</div>';
+                            
                             }
                             echo '</div>';
                             echo '</div>';
@@ -114,7 +121,7 @@ $listes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         echo '</div>';
                         echo '</div>';
                     }
-                    
+
                     // Mise à jour des variables pour la nouvelle liste
                     $currentListId = $liste['id_Liste'];
                     $currentListName = $liste['nom'];
@@ -123,77 +130,74 @@ $listes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     $currentCreateurNom = $liste['createur_nom'];
 
                     // Réinitialiser les commentaires de la nouvelle liste
-                    $currentListComments = array();
+                    $currentListComments[$currentListId] = array();
 
-                    // Afficher les informations de la nouvelle liste
+                    // Afficher la nouvelle liste
                     echo '<div class="col-md-4">';
                     echo '<div class="card m-3">';
                     echo '<div class="card-body">';
-                    echo '<h2 class="card-title text-primary">' . $currentListName . '</h2>';
-                    echo '<p class="card-text text-muted">' . $currentListDescription . '</p>';
-                    echo '<p class="card-text text-muted">Créateur : ' . $currentCreateurNom . '</p>';
-                    echo '<p class="card-text text-muted">' . $currentListDate . '</p>';
-                    echo '<p>Articles :</p>';
-                    echo '<ul>';
+                    echo '<h5 class="card-title">' . $currentListName . '</h5>';
+                    echo '<p class="card-text">' . $currentListDescription . '</p>';
+                    echo '<p class="card-text">Crée le : ' . $currentListDate . '</p>';
+                    echo '<p class="card-text">Créateur : ' . $currentCreateurNom . '</p>';
+                    echo '<h6 class="card-subtitle mb-2 text-muted">Articles :</h6>';
+                    echo '<ul class="list-group">';
                 }
-                
-                // Ajouter le commentaire à la liste des commentaires de la liste en cours
+
+                // Afficher les informations de l'article
+                echo '<li class="list-group-item">' . $liste['article_nom'] . '</li>';
+
+                // Vérifier s'il y a des commentaires pour cet article
                 if (!empty($liste['commentaire'])) {
-                    $currentListComments[] = $liste['commentaire'];
+                    // Ajouter le commentaire à la liste correspondante
+                    $currentListComments[$currentListId][] = array(
+                        'avatar' => $liste['avatar'],
+                        'auteur' => $liste['createur_nom'],
+                        'description' => $liste['commentaire']
+                    );
                 }
-                
-                // Afficher l'article correspondant
-                echo '<li>' . $liste['article_nom'] . ' - ' . $liste['article_description'] . '</li>';
             }
-            
-            // Requête pour récupérer les commentaires pour cette liste spécifique avec les informations de l'auteur
-            $queryComments = "SELECT c.description, c.date, u.nom AS auteur_nom, u.avatar AS auteur_avatar
-            FROM commentaire c
-            INNER JOIN utilisateur u ON c.id_Utilisateur = u.id_Utilisateur
-            WHERE c.id_Liste = :id_liste";
-            $stmtComments = $pdo->prepare($queryComments);
-            $stmtComments->bindValue(':id_liste', $currentListId);
-            $stmtComments->execute();
-            $currentListComments = $stmtComments->fetchAll(PDO::FETCH_ASSOC);
-            
-            // Afficher les commentaires pour cette liste spécifique
-            if (!empty($currentListComments)) {
-                echo '<div class="card m-3">';
-                echo '<div class="card-body">';
-                echo '<h5 class="card-title">Commentaires :</h5>';
-                foreach ($currentListComments as $comment) {
-                    echo '<div class="comment">';
-                    echo '<div class="comment-avatar">';
-                    echo '<img src="assets/images/' . $comment['auteur_avatar'] . '" alt="Avatar" class="comment-avatar">';
-                    echo '</div>';
-                    echo '<div class="comment-content">';
-                    echo '<p class="comment-author">' . $comment['auteur_nom'] . ':</p>';
-                    echo '<p class="comment-text">' . $comment['description'] . '</p>';
+
+            // Fermer la dernière liste
+            if ($currentListId !== null) {
+                echo '</ul>';
+
+                // Afficher les commentaires pour la dernière liste
+                if (!empty($currentListComments)) {
+                    echo '<div class="card m-3">';
+                    echo '<div class="card-body">';
+                    echo '<h5 class="card-title">Commentaires :</h5>';
+                    foreach ($currentListComments[$currentListId] as $comment) {
+                        echo '<div class="comment">';
+                        echo '<img class="comment-avatar" src="assets/images/' . $comment['avatar'] . '" alt="Avatar">';
+                        echo '<div>';
+                        echo '<p class="comment-author">' . $comment['auteur'] . '</p>';
+                        echo '<p class="card-text">' . $comment['description'] . '</p>';
+                        echo '</div>';
+                        echo '</div>';
+                    }
+                    
                     echo '</div>';
                     echo '</div>';
                 }
+
+                // Afficher le formulaire de commentaire pour la dernière liste
+                echo '<form action="ajouter_commentaire.php" method="POST">';
+                echo '<input type="hidden" name="id_liste" value="' . $currentListId . '">';
+                echo '<div class="mb-3">';
+                echo '<label for="commentaire">Ajouter un commentaire :</label>';
+                echo '<textarea class="form-control" name="commentaire" id="commentaire" rows="3" required></textarea>';
+                echo '</div>';
+                echo '<button type="submit" class="btn btn-primary">Ajouter un commentaire</button>';
+                echo '</form>';
+
+                echo '</div>';
                 echo '</div>';
                 echo '</div>';
             }
- 
-                 // Afficher le formulaire de commentaire pour cette liste spécifique
-                 echo '<form action="ajouter_commentaire.php" method="POST">';
-                 echo '<input type="hidden" name="id_liste" value="' . $currentListId . '">';
-                 echo '<div class="mb-3">';
-                 echo '<label for="commentaire">Ajouter un commentaire :</label>';
-                 echo '<textarea class="form-control" name="commentaire" id="commentaire" rows="3" required></textarea>';
-                 echo '</div>';
-                 echo '<button type="submit" class="btn btn-primary">Ajouter un commentaire</button>';
-                 echo '</form>';
- 
-                 echo '</div>';
-                 echo '</div>';
-                 echo '</div>';
-                       
             ?>
         </div>
     </div>
-
 </body>
 
 </html>
