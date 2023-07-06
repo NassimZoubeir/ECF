@@ -10,10 +10,13 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     $getid = $_GET['id'];
     // Récupérer la valeur de l'identifiant depuis le paramètre GET
 
-    // Supprimer l'utilisateur et ses listes associées
-    $supprimerUtilisateur = $bdd->prepare('DELETE utilisateur, liste
+    // Supprimer l'utilisateur, ses listes, ses commentaires et les articles associés
+    $supprimerUtilisateur = $bdd->prepare('DELETE utilisateur, liste, commentaire, liste_has_article, article
                                            FROM utilisateur
                                            LEFT JOIN liste ON utilisateur.id_Utilisateur = liste.id_Utilisateur
+                                           LEFT JOIN commentaire ON liste.id_Liste = commentaire.id_Liste
+                                           LEFT JOIN liste_has_article ON liste.id_Liste = liste_has_article.id_Liste
+                                           LEFT JOIN article ON liste_has_article.id_Article = article.id_Article
                                            WHERE utilisateur.id_Utilisateur = ?');
     $supprimerUtilisateur->execute(array($getid));
 
