@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $commentaire = $_POST['commentaire'];
     $date = date('Y-m-d');
 
-    // Vérifier si l'utilisateur est connecté et récupérer son ID
+    // Vérifier si l'utilisateur est connecté et récupérer ses informations
     $idUtilisateur = isset($_SESSION['auth']) ? $_SESSION['auth']->id_Utilisateur : null;
 
     // Vérifier si $idUtilisateur est nul et afficher un message d'erreur si nécessaire
