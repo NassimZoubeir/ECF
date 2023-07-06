@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost:8889
--- Généré le : jeu. 22 juin 2023 à 14:21
+-- Généré le : jeu. 06 juil. 2023 à 07:45
 -- Version du serveur : 5.7.24
 -- Version de PHP : 8.0.1
 
@@ -170,36 +170,66 @@ CREATE TABLE `liste_has_article` (
 --
 
 INSERT INTO `liste_has_article` (`id_Liste`, `id_Article`) VALUES
-(3, 18),
-(3, 15),
-(4, 10),
-(5, 18),
-(2, 20),
-(4, 17),
-(1, 13),
-(1, 13),
-(3, 8),
-(2, 18),
-(1, 20),
-(5, 2),
-(4, 16),
-(3, 15),
-(5, 16),
-(4, 20),
-(3, 5),
-(5, 12),
-(4, 8),
-(2, 13),
-(2, 16),
-(5, 3),
-(5, 4),
-(5, 12),
-(5, 18),
+(2, 9),
 (3, 4),
-(2, 18),
-(2, 18),
-(2, 5),
-(4, 1);
+(5, 18),
+(5, 17),
+(3, 13),
+(5, 10),
+(2, 13),
+(5, 18),
+(4, 13),
+(5, 1),
+(1, 17),
+(1, 6),
+(4, 18),
+(1, 1),
+(3, 3),
+(4, 3),
+(3, 2),
+(3, 14),
+(5, 19),
+(2, 2),
+(5, 19),
+(4, 18),
+(2, 11),
+(2, 19),
+(4, 19),
+(3, 14),
+(4, 7),
+(2, 2),
+(1, 12),
+(2, 4),
+(4, 11),
+(3, 20),
+(2, 1),
+(5, 6),
+(2, 9),
+(1, 18),
+(4, 10),
+(3, 19),
+(2, 17),
+(3, 9),
+(1, 7),
+(1, 7),
+(1, 17),
+(5, 5),
+(3, 12),
+(5, 20),
+(5, 7),
+(3, 20),
+(4, 18),
+(5, 7),
+(1, 18),
+(1, 19),
+(5, 15),
+(2, 8),
+(1, 6),
+(5, 19),
+(5, 1),
+(3, 16),
+(1, 15),
+(4, 3);
 
 -- --------------------------------------------------------
 
@@ -211,10 +241,10 @@ CREATE TABLE `utilisateur` (
   `id_Utilisateur` int(11) NOT NULL,
   `nom` varchar(45) DEFAULT NULL,
   `email` varchar(45) DEFAULT NULL,
-  `mp` varchar(50) DEFAULT NULL,
+  `mp` varchar(255) DEFAULT NULL,
   `isActive` tinyint(4) DEFAULT NULL,
   `role` int(11) DEFAULT NULL,
-  `avatar` varchar(100) DEFAULT NULL
+  `avatar` varchar(400) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -279,25 +309,25 @@ ALTER TABLE `utilisateur`
 -- AUTO_INCREMENT pour la table `article`
 --
 ALTER TABLE `article`
-  MODIFY `id_Article` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id_Article` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT pour la table `commentaire`
 --
 ALTER TABLE `commentaire`
-  MODIFY `id_Commentaire` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id_Commentaire` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT pour la table `liste`
 --
 ALTER TABLE `liste`
-  MODIFY `id_Liste` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_Liste` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT pour la table `utilisateur`
 --
 ALTER TABLE `utilisateur`
-  MODIFY `id_Utilisateur` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_Utilisateur` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Contraintes pour les tables déchargées
@@ -307,21 +337,21 @@ ALTER TABLE `utilisateur`
 -- Contraintes pour la table `commentaire`
 --
 ALTER TABLE `commentaire`
-  ADD CONSTRAINT `fk_Commentaire_Liste1` FOREIGN KEY (`id_Liste`) REFERENCES `liste` (`id_Liste`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_Commentaire_Liste1` FOREIGN KEY (`id_Liste`) REFERENCES `liste` (`id_Liste`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_Commentaire_Utilisateur1` FOREIGN KEY (`id_Utilisateur`) REFERENCES `utilisateur` (`id_Utilisateur`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Contraintes pour la table `liste`
 --
 ALTER TABLE `liste`
-  ADD CONSTRAINT `fk_Liste_Utilisateur1` FOREIGN KEY (`id_Utilisateur`) REFERENCES `utilisateur` (`id_Utilisateur`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_Liste_Utilisateur1` FOREIGN KEY (`id_Utilisateur`) REFERENCES `utilisateur` (`id_Utilisateur`) ON DELETE CASCADE;
 
 --
 -- Contraintes pour la table `liste_has_article`
 --
 ALTER TABLE `liste_has_article`
   ADD CONSTRAINT `fk_Liste_has_Article_Article1` FOREIGN KEY (`id_Article`) REFERENCES `article` (`id_Article`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_Liste_has_Article_Liste` FOREIGN KEY (`id_Liste`) REFERENCES `liste` (`id_Liste`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_Liste_has_Article_Liste` FOREIGN KEY (`id_Liste`) REFERENCES `liste` (`id_Liste`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
