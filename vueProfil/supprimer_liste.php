@@ -37,6 +37,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Location: profil.php');
     exit();
 }
+// Mettre à jour la contrainte de clé étrangère pour la suppression en cascade
+$query = "ALTER TABLE commentaire DROP FOREIGN KEY fk_Commentaire_Liste1";
+$stmt = $pdo->prepare($query);
+$stmt->execute();
+
+$query = "ALTER TABLE commentaire ADD CONSTRAINT fk_Commentaire_Liste1 FOREIGN KEY (id_Liste) REFERENCES liste (id_Liste) ON DELETE CASCADE";
+$stmt = $pdo->prepare($query);
+$stmt->execute();
 ?>
 
 <!DOCTYPE html>
