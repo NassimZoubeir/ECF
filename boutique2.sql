@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost:8889
--- Généré le : jeu. 06 juil. 2023 à 07:45
+-- Généré le : jeu. 06 juil. 2023 à 08:24
 -- Version du serveur : 5.7.24
 -- Version de PHP : 8.0.1
 
@@ -261,7 +261,8 @@ INSERT INTO `utilisateur` (`id_Utilisateur`, `nom`, `email`, `mp`, `isActive`, `
 (7, 'Luigi Smitham', 'kerluke.ross@yahoo.com', '_h6;,(bRRM', 0, 2, 'http://www.ohara.com/voluptatem-vero-ad-voluptatum-officia-nulla-veniam'),
 (8, 'Katarina Marvin IV', 'letitia.jacobs@hotmail.com', 'SMAjqkbhO', 0, 2, 'http://www.little.com/'),
 (9, 'Mr. Aric Beer MD', 'kallie.abshire@schowalter.com', '9Q8w}V7E]/:40gM^L', 1, 1, 'http://wehner.org/voluptate-hic-voluptatem-a-minus'),
-(10, 'Prof. Gerry Crooks', 'maude.bosco@hotmail.com', 'wPdx\\3$67ZF\"j5YzN.3', 0, 2, 'http://www.jenkins.com/');
+(10, 'Prof. Gerry Crooks', 'maude.bosco@hotmail.com', 'wPdx\\3$67ZF\"j5YzN.3', 0, 2, 'http://www.jenkins.com/'),
+(11, 'Nassim', 'nassimz@outlook.fr', '$2y$10$yNbI76UZ4MpKgHtI3WCm.ugWO4OLfuT7Bb1FW6jLriHYDF7pGboLu', 1, 3, 'icone-luffy (2).png');
 
 --
 -- Index pour les tables déchargées
@@ -309,19 +310,19 @@ ALTER TABLE `utilisateur`
 -- AUTO_INCREMENT pour la table `article`
 --
 ALTER TABLE `article`
-  MODIFY `id_Article` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id_Article` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT pour la table `commentaire`
 --
 ALTER TABLE `commentaire`
-  MODIFY `id_Commentaire` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id_Commentaire` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT pour la table `liste`
 --
 ALTER TABLE `liste`
-  MODIFY `id_Liste` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_Liste` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT pour la table `utilisateur`
@@ -338,7 +339,7 @@ ALTER TABLE `utilisateur`
 --
 ALTER TABLE `commentaire`
   ADD CONSTRAINT `fk_Commentaire_Liste1` FOREIGN KEY (`id_Liste`) REFERENCES `liste` (`id_Liste`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_Commentaire_Utilisateur1` FOREIGN KEY (`id_Utilisateur`) REFERENCES `utilisateur` (`id_Utilisateur`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_Commentaire_Utilisateur1` FOREIGN KEY (`id_Utilisateur`) REFERENCES `utilisateur` (`id_Utilisateur`) ON DELETE CASCADE;
 
 --
 -- Contraintes pour la table `liste`
