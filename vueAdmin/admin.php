@@ -25,6 +25,14 @@ if (!isset($_SESSION['auth']) || intval($_SESSION['auth']->role) !== 3) {
     <meta name="theme-color" content="#ffffff">
     <title>Admin</title>
 </head>
+<script>
+    function confirmDelete(userId) {
+  var confirmDelete = confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?");
+  if (confirmDelete) {
+    window.location.href = "supprimer.php?id=" + userId;
+  }
+}
+</script>
 <body>
     <?php include 'menu.php'; ?>
     <h1 class="text-center mt-5">Bienvenue sur la page Admin</h1>
@@ -35,7 +43,7 @@ if (!isset($_SESSION['auth']) || intval($_SESSION['auth']->role) !== 3) {
        ?>
       <p style="display:flex; justify-content:center; align-items:center; padding-top: 2em">
         <?=  $user['nom'];?>
-        <button><a href="supprimer.php?id=<?= $user['id_Utilisateur'] ?>" style="color:red; text-decoration: none;">Supprimer le membre</a></button>
+        <button onclick="confirmDelete(<?= $user['id_Utilisateur'] ?>)" style="color:red; text-decoration: none;">Supprimer le membre</button>
         <?php if ($user['isActive'] == 1): ?>
             <button><a href="desactiver.php?id=<?= $user['id_Utilisateur'] ?>" style="color:orange; text-decoration: none;">Désactiver</a></button>
         <?php else: ?>

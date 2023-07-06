@@ -1,6 +1,5 @@
 <?php 
 require_once "../include/db.php";
-session_start();
 
 if(isset($_POST['submit'])){
 
@@ -49,7 +48,7 @@ if(isset($_POST['submit'])){
         // Liaison entre les colonnes et leurs valeurs
         $statement->bindParam(':nom', $nom);
         $statement->bindParam(':email', $email);
-        $statement->bindParam(':mp', $passHash);
+        $statement->bindParam(':mp', $passHash, PDO::PARAM_STR, 255);
         $statement->bindValue(':isActive', 1); // Nouvel utilisateur activé par défaut
         $statement->bindValue(':role', 2); // Nouvel utilisateur avec le rôle d'utilisateur par défaut
         $statement->bindParam(':avatar', $avatar);
